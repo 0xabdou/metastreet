@@ -1,7 +1,12 @@
 import Link from "next/link";
+import useSigner from "state/signer";
+import AddressAvatar from "./AddressAvatar";
 import ConnectButton from "./ConnectButton";
+import SearchButton from "./SearchButton";
 
 const TopBar = () => {
+  const { address } = useSigner();
+
   return (
     <div className="fixed top-0 w-full">
       <div className="relative flex w-full items-center px-4  py-4 shadow">
@@ -11,7 +16,13 @@ const TopBar = () => {
           </a>
         </Link>
         <div className="flex-grow" />
-        <ConnectButton />
+        {!address && <ConnectButton />}
+        {address && (
+          <div className="flex items-center space-x-4">
+            <SearchButton />
+            <AddressAvatar address={address} />
+          </div>
+        )}
       </div>
     </div>
   );

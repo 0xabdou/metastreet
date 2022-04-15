@@ -13,6 +13,7 @@ const HomePage = () => {
   const notConnected = !signer;
   const loading = signer && !collections && !collectionsError;
   const empty = signer && collections && collections.length == 0;
+  const error = !notConnected && !collections && collectionsError;
   const loaded = signer && collections && collections.length > 0;
 
   return (
@@ -41,7 +42,7 @@ const HomePage = () => {
       )}
       {notConnected && <EmptyState>Connect your wallet</EmptyState>}
       {loading && <EmptyState>Loading...</EmptyState>}
-      {collectionsError && <EmptyState>Couldn't fetch your NFTs...</EmptyState>}
+      {error && <EmptyState>Couldn't fetch your NFTs...</EmptyState>}
       {empty && <EmptyState>Nothing to show here</EmptyState>}
 
       {loaded && (
