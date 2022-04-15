@@ -30,7 +30,7 @@ const CustomDialog = (props: DialogProps) => {
         <button onClick={onClose} className="absolute right-4 top-4">
           <XIcon className="h-5 w-5" />
         </button>
-        <Dialog.Title className="text-2xl font-bold">{title}</Dialog.Title>
+        <Dialog.Title className="text-xl font-bold">{title}</Dialog.Title>
         <Dialog.Description className="mb-2">{description}</Dialog.Description>
         {children}
       </div>

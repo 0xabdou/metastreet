@@ -1,10 +1,10 @@
 import classNames from "classnames";
-import { useRouter } from "next/router";
 import { useEffect, useState } from "react";
 import { toast } from "react-toastify";
-import { NFT } from "state/balances";
+import useBalances, { NFT } from "state/balances";
 import useSigner from "state/signer";
 import { fetchNFTMetadata } from "../helpers";
+import AddressInputDialog from "./AddressInputDialog";
 
 type NFTMetadata = {
   name: string;
@@ -20,21 +20,29 @@ type NFTCardProps = {
 
 const NFTCard = (props: NFTCardProps) => {
   const { nft, contractAddress, className } = props;
-  const { address } = useSigner();
-  const router = useRouter();
+  const { searchAddress } = useSigner();
+  const { transferNFT } = useBalances();
   const [meta, setMeta] = useState<NFTMetadata>();
   const [loading, setLoading] = useState(false);
-  const [sellPopupOpen, setSellPopupOpen] = useState(false);
+  const [addressDialogOpen, setAddressDialogOpen] = useState(false);
 
   useEffect(() => {
     fetchNFTMetadata({ contractAddress, tokenID: nft.token_id })
       .then(setMeta)
       .catch((e) => console.log(e));
-  }, [nft.token_url]);
+  }, [contractAddress, nft.token_id]);
 
-  const showErrorToast = () => toast.warn("Something wrong!");
-
-  const onButtonClick = async () => {};
+  const onTransfer = async (to: string) => {
+    setLoading(true);
+    try {
+      await transferNFT({ to, contractAddress, tokenID: nft.token_id });
+      toast.success("NFT Transferred, refresh the page");
+    } catch (e) {
+      toast.warn("Something wrong happened");
+      console.log(e);
+    }
+    setLoading(false);
+  };
 
   return (
     <div
@@ -54,20 +62,38 @@ const NFTCard = (props: NFTCardProps) => {
           loading...
         </div>
       )}
-      <div className="flex flex-col p-4">
+      <div className="flex h-24 flex-col p-4">
         <p className="text-lg">{meta?.name ?? "..."}</p>
-        <span className="text-sm font-normal">
+        <span className="text-sm font-normal line-clamp-2">
           {meta?.description ?? "..."}
         </span>
       </div>
-      <button
-        className="group flex h-16 items-center justify-center bg-black text-lg font-semibold text-white"
-        onClick={onButtonClick}
-        disabled={loading}
-      >
-        {loading && "Busy..."}
-        {!loading && "Transfer"}
-      </button>
+      {
+        // Only show the transfer button if the NFT is owned by the connected wallet
+        !searchAddress && (
+          <button
+            className="group flex h-16 items-center justify-center bg-black text-lg font-semibold text-white"
+            onClick={() => setAddressDialogOpen(true)}
+            disabled={loading || !meta}
+          >
+            {loading && "BUSY..."}
+            {!loading && "TRANSFER"}
+          </button>
+        )
+      }
+      <AddressInputDialog
+        open={addressDialogOpen}
+        onClose={() => setAddressDialogOpen(false)}
+        onSubmit={onTransfer}
+        title="Transfer"
+        action="SUBMIT"
+        description={
+          <>
+            Enter the address to which you want to transfer{" "}
+            <span className="font-semibold">{meta?.name}</span> to:
+          </>
+        }
+      />
     </div>
   );
 };

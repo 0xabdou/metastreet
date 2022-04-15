@@ -1,5 +1,5 @@
 import { ethers } from "ethers";
-import { useState } from "react";
+import { ReactNode, useState } from "react";
 import Button from "./Button";
 import CustomDialog from "./CustomDialog";
 import { Input } from "./Input";
@@ -8,10 +8,20 @@ type AddressInputDialogProps = {
   open: boolean;
   onClose: () => void;
   onSubmit: (address: string) => void;
+  title?: string;
+  description?: ReactNode;
+  action?: string;
 };
 
 const AddressInputDialog = (props: AddressInputDialogProps) => {
-  const { onSubmit, open, onClose } = props;
+  const {
+    onSubmit,
+    open,
+    onClose,
+    title = "SEARCH BY ADDRESS",
+    description = "Display NFTs for a different address",
+    action = "SEARCH",
+  } = props;
   const [address, setAddress] = useState("");
   const [error, setError] = useState<string>();
 
@@ -33,8 +43,8 @@ const AddressInputDialog = (props: AddressInputDialogProps) => {
     <CustomDialog
       open={open}
       onClose={onClose}
-      title="SEARCH BY ADDRESS"
-      description="Display NFTs for a different address"
+      title={title}
+      description={description}
       className="w-96"
     >
       <div className="flex items-center space-x-2">
@@ -46,7 +56,7 @@ const AddressInputDialog = (props: AddressInputDialogProps) => {
           className="flex-grow"
           autoFocus
         />
-        <Button onClick={validateThenSubmit}>SEARCH</Button>
+        <Button onClick={validateThenSubmit}>{action}</Button>
       </div>
     </CustomDialog>
   );
