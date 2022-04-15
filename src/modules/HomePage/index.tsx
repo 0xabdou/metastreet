@@ -2,6 +2,7 @@ import { ExclamationCircleIcon, XIcon } from "@heroicons/react/outline";
 import { ExternalLinkIcon } from "@heroicons/react/solid";
 import EmptyState from "components/EmptyState";
 import NFTCard from "components/NFTCard";
+import Head from "next/head";
 import useNFTs from "state/nfts";
 import useSigner from "state/signer";
 
@@ -16,6 +17,9 @@ const HomePage = () => {
 
   return (
     <div className="flex w-full flex-col">
+      <Head>
+        <title>MetaStreet: Case Study</title>
+      </Head>
       {!notConnected && searchAddress && (
         <div className="mb-4 flex items-center space-x-2 self-center">
           <div className="flex items-center rounded bg-blue-100 px-2 py-1">
