@@ -13,6 +13,8 @@ type SignerContextType = {
   address?: string;
   loading: boolean;
   connectWallet: () => Promise<void>;
+  searchAddress?: string;
+  setSearchAddress: (address?: string) => void;
 };
 
 const SignerContext = createContext<SignerContextType>({} as any);
@@ -23,6 +25,7 @@ export const SignerProvider = ({ children }: { children: ReactNode }) => {
   const [signer, setSigner] = useState<JsonRpcSigner>();
   const [address, setAddress] = useState<string>();
   const [loading, setLoading] = useState(false);
+  const [searchAddress, setSearchAddress] = useState<string>();
 
   useEffect(() => {
     const ethereum = (window as any).ethereum;
@@ -70,7 +73,14 @@ export const SignerProvider = ({ children }: { children: ReactNode }) => {
     setLoading(false);
   };
 
-  const contextValue = { signer, address, loading, connectWallet };
+  const contextValue = {
+    signer,
+    address,
+    loading,
+    connectWallet,
+    searchAddress,
+    setSearchAddress,
+  };
 
   return (
     <SignerContext.Provider value={contextValue}>

@@ -15,12 +15,13 @@ type Collection = {
 };
 
 const useBalances = () => {
-  const { address = "" } = useSigner();
+  const { address, searchAddress } = useSigner();
+  const addressToBeUsed = searchAddress ?? address ?? "";
 
-  const currentQK = ["balances", address];
+  const currentQK = ["balances", addressToBeUsed];
   const { data, error } = useQuery<Collection[], number>(
     currentQK,
-    () => fetchBalancesRequest(address),
+    () => fetchBalancesRequest(addressToBeUsed),
     {
       enabled: Boolean(address),
     }

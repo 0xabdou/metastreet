@@ -1,5 +1,6 @@
 import { Dialog } from "@headlessui/react";
 import { XIcon } from "@heroicons/react/solid";
+import classNames from "classnames";
 import { ReactNode } from "react";
 
 type DialogProps = {
@@ -8,10 +9,11 @@ type DialogProps = {
   title: ReactNode;
   description: ReactNode;
   children: ReactNode;
+  className?: string;
 };
 
 const CustomDialog = (props: DialogProps) => {
-  const { open, onClose, title, description, children } = props;
+  const { open, onClose, title, description, children, className } = props;
 
   return (
     <Dialog
@@ -19,7 +21,12 @@ const CustomDialog = (props: DialogProps) => {
       onClose={onClose}
       className="fixed inset-0 z-50 flex items-center justify-center overflow-y-auto"
     >
-      <div className="relative z-20 flex flex-col rounded-xl bg-white p-4">
+      <div
+        className={classNames(
+          "max-w-screen relative z-20 flex flex-col rounded-xl bg-white p-4",
+          className
+        )}
+      >
         <button onClick={onClose} className="absolute right-4 top-4">
           <XIcon className="h-5 w-5" />
         </button>

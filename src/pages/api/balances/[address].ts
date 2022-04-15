@@ -24,22 +24,9 @@ const handler: NextApiHandler = async (req, res) => {
   // Get data from Covalent response
   const json = await response.json();
   const items = json.data.items as any[];
-  let collections = items.filter((item) => item.type == "nft");
-  // Format ipfs url correctly
-  collections = collections.map((collection) => {
-    const nft_data = collection.nft_data.map((nft: any) => {
-      // Get CID
-      const needle = "/ipfs/";
-      const index = nft.token_url.search(needle);
-      const cid = nft.token_url.substring(index + needle.length);
-      // Construct valid ipfs url
-      const token_url = `ipfs://${cid}`;
-      // Return valid nft object
-      return { ...nft, token_url };
-    });
-    // return collection with valid nft_data
-    return { ...collection, nft_data };
-  });
+  let collections = items
+    .filter((item) => item.type == "nft")
+    .filter((item) => item.nft_data && item.nft_data.length);
   // return collection to the caller
   res.status(200).json({ collections });
 };

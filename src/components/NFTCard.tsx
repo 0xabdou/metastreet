@@ -4,7 +4,7 @@ import { useEffect, useState } from "react";
 import { toast } from "react-toastify";
 import { NFT } from "state/balances";
 import useSigner from "state/signer";
-import { ipfsToHTTPS } from "../helpers";
+import { fetchNFTMetadata } from "../helpers";
 
 type NFTMetadata = {
   name: string;
@@ -14,11 +14,12 @@ type NFTMetadata = {
 
 type NFTCardProps = {
   nft: NFT;
+  contractAddress: string;
   className?: string;
 };
 
 const NFTCard = (props: NFTCardProps) => {
-  const { nft, className } = props;
+  const { nft, contractAddress, className } = props;
   const { address } = useSigner();
   const router = useRouter();
   const [meta, setMeta] = useState<NFTMetadata>();
@@ -26,17 +27,9 @@ const NFTCard = (props: NFTCardProps) => {
   const [sellPopupOpen, setSellPopupOpen] = useState(false);
 
   useEffect(() => {
-    const fetchMetadata = async () => {
-      const metadataResponse = await fetch(ipfsToHTTPS(nft.token_url));
-      if (metadataResponse.status != 200) return;
-      const json = await metadataResponse.json();
-      setMeta({
-        name: json.name,
-        description: json.description,
-        imageURL: ipfsToHTTPS(json.image),
-      });
-    };
-    void fetchMetadata();
+    fetchNFTMetadata({ contractAddress, tokenID: nft.token_id })
+      .then(setMeta)
+      .catch((e) => console.log(e));
   }, [nft.token_url]);
 
   const showErrorToast = () => toast.warn("Something wrong!");
@@ -54,10 +47,10 @@ const NFTCard = (props: NFTCardProps) => {
         <img
           src={meta?.imageURL}
           alt={meta?.name}
-          className="h-80 w-full object-cover object-center"
+          className="h-80 w-full flex-shrink-0 object-cover object-center"
         />
       ) : (
-        <div className="flex h-80 w-full items-center justify-center">
+        <div className="flex h-80 w-full flex-shrink-0 items-center justify-center">
           loading...
         </div>
       )}

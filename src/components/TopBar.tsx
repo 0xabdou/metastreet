@@ -7,7 +7,7 @@ const TopBar = () => {
       <div className="relative flex w-full items-center px-4  py-4 shadow">
         <Link href="/">
           <a>
-            <img src="/meta_street.png" className="h-6" />
+            <img src="/meta_street.png" className="h-8" />
           </a>
         </Link>
         <div className="flex-grow" />
