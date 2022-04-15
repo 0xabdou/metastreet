@@ -1,7 +1,7 @@
 import classNames from "classnames";
 import { useEffect, useState } from "react";
 import { toast } from "react-toastify";
-import useBalances, { NFT } from "state/balances";
+import useNFTs, { NFT } from "state/nfts";
 import useSigner from "state/signer";
 import { fetchNFTMetadata } from "../helpers";
 import AddressInputDialog from "./AddressInputDialog";
@@ -21,7 +21,7 @@ type NFTCardProps = {
 const NFTCard = (props: NFTCardProps) => {
   const { nft, contractAddress, className } = props;
   const { searchAddress } = useSigner();
-  const { transferNFT } = useBalances();
+  const { transferNFT } = useNFTs();
   const [meta, setMeta] = useState<NFTMetadata>();
   const [loading, setLoading] = useState(false);
   const [addressDialogOpen, setAddressDialogOpen] = useState(false);

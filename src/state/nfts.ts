@@ -29,14 +29,14 @@ const ERC_721_ABI = [
   },
 ];
 
-const useBalances = () => {
+const useNFTs = () => {
   const { signer, address, searchAddress } = useSigner();
   const addressToBeUsed = searchAddress ?? address ?? "";
 
-  const currentQK = ["balances", addressToBeUsed];
+  const currentQK = ["nfts", addressToBeUsed];
   const { data, error } = useQuery<Collection[], number>(
     currentQK,
-    () => fetchBalancesRequest(addressToBeUsed),
+    () => fetchNFTsRequest(addressToBeUsed),
     {
       enabled: Boolean(address),
     }
@@ -58,11 +58,11 @@ const useBalances = () => {
   return { collections: data, collectionsError: error, transferNFT };
 };
 
-const fetchBalancesRequest = async (address: string) => {
-  const response = await fetch(`/api/balances/${address}`);
+const fetchNFTsRequest = async (address: string) => {
+  const response = await fetch(`/api/nfts/${address}`);
   if (response.status != 200) throw new Error(`${response.status}`);
   const json = await response.json();
   return json.collections;
 };
 
-export default useBalances;
+export default useNFTs;

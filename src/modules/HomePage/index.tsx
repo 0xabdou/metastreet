@@ -2,12 +2,12 @@ import { ExclamationCircleIcon, XIcon } from "@heroicons/react/outline";
 import { ExternalLinkIcon } from "@heroicons/react/solid";
 import EmptyState from "components/EmptyState";
 import NFTCard from "components/NFTCard";
-import useBalances from "state/balances";
+import useNFTs from "state/nfts";
 import useSigner from "state/signer";
 
 const HomePage = () => {
   const { signer, searchAddress, setSearchAddress } = useSigner();
-  const { collections, collectionsError } = useBalances();
+  const { collections, collectionsError } = useNFTs();
 
   const notConnected = !signer;
   const loading = signer && !collections && !collectionsError;
@@ -49,6 +49,7 @@ const HomePage = () => {
                 href={`https://etherscan.io/address/${collection.contract_address}`}
                 target="_blank"
                 rel="noopener noreferrer"
+                className="self-start"
               >
                 <h2 className="mb-4 flex items-center text-2xl font-bold hover:underline">
                   {collection.contract_name} (
