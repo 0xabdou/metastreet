@@ -2,9 +2,9 @@ import classNames from "classnames";
 import { useRouter } from "next/router";
 import { useEffect, useState } from "react";
 import { toast } from "react-toastify";
+import { NFT } from "state/balances";
 import useSigner from "state/signer";
 import { ipfsToHTTPS } from "../helpers";
-import AddressAvatar from "./AddressAvatar";
 
 type NFTMetadata = {
   name: string;
@@ -13,7 +13,7 @@ type NFTMetadata = {
 };
 
 type NFTCardProps = {
-  nft: any;
+  nft: NFT;
   className?: string;
 };
 
@@ -27,7 +27,7 @@ const NFTCard = (props: NFTCardProps) => {
 
   useEffect(() => {
     const fetchMetadata = async () => {
-      const metadataResponse = await fetch(ipfsToHTTPS(nft.tokenURI));
+      const metadataResponse = await fetch(ipfsToHTTPS(nft.token_url));
       if (metadataResponse.status != 200) return;
       const json = await metadataResponse.json();
       setMeta({
@@ -37,14 +37,11 @@ const NFTCard = (props: NFTCardProps) => {
       });
     };
     void fetchMetadata();
-  }, [nft.tokenURI]);
+  }, [nft.token_url]);
 
   const showErrorToast = () => toast.warn("Something wrong!");
 
   const onButtonClick = async () => {};
-
-  const forSale = nft.price != "0";
-  const owned = nft.owner == address?.toLowerCase();
 
   return (
     <div
@@ -69,7 +66,6 @@ const NFTCard = (props: NFTCardProps) => {
         <span className="text-sm font-normal">
           {meta?.description ?? "..."}
         </span>
-        <AddressAvatar address={nft.owner} />
       </div>
       <button
         className="group flex h-16 items-center justify-center bg-black text-lg font-semibold text-white"
@@ -77,23 +73,7 @@ const NFTCard = (props: NFTCardProps) => {
         disabled={loading}
       >
         {loading && "Busy..."}
-        {!loading && (
-          <>
-            {!forSale && "SELL"}
-            {forSale && owned && (
-              <>
-                <span className="group-hover:hidden">{nft.price} ETH</span>
-                <span className="hidden group-hover:inline">CANCEL</span>
-              </>
-            )}
-            {forSale && !owned && (
-              <>
-                <span className="group-hover:hidden">{nft.price} ETH</span>
-                <span className="hidden group-hover:inline">BUY</span>
-              </>
-            )}
-          </>
-        )}
+        {!loading && "Transfer"}
       </button>
     </div>
   );

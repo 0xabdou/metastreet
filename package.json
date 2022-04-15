@@ -15,6 +15,7 @@
     "react": "17.0.2",
     "react-blockies": "1.4.1",
     "react-dom": "17.0.2",
+    "react-query": "^3.34.19",
     "react-toastify": "8.2.0"
   },
   "devDependencies": {
@@ -22,6 +23,7 @@
     "@types/node": "17.0.4",
     "@types/react": "17.0.38",
     "@types/react-blockies": "1.4.1",
+    "@types/react-query": "^1.2.9",
     "@types/react-toastify": "4.1.0",
     "@typescript-eslint/eslint-plugin": "5.11.0",
     "@typescript-eslint/parser": "5.11.0",
